@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const { networks } = './constants/networks';
-const customTypes = './constants/customTypes';
+const customTypes = require('./constants/customTypes');
 
 module.exports = {
   substrateNetwork: process.env.SUBSTRATE_NETWORK || 'polkadot',
@@ -15,7 +15,7 @@ module.exports = {
     port: process.env.POSTGRES_PORT || 5432,
   },
 
-  types: customTypes,
+  types: customTypes.customTypes,
 
   crawlers: [
 
