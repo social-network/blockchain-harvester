@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.app }}
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.app }}
+  serviceName: {{ .Values.app }}
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  podManagementPolicy: Parallel
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app }}
+    spec:
+      {{- if .Values.rbac.enable }}
+      serviceAccountName: {{ .Values.rbac.name }}
+      {{- else }}
+      serviceAccountName: default
+      {{- end }}
+      {{- if .Values.node_selector }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+                - key: node
+                  operator: In
+                  values:
+                  - {{ .Values.node_selector }}
+        {{- end }}
+      terminationGracePeriodSeconds: 300
+      containers:
+      - name: {{ .Values.app }}
+        imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.app }}-config
+        ports:
+        - containerPort: 5432
+          name: postgres
+        resources:
+          requests:
+            cpu: {{ .Values.requests.cpu }}
+            memory: {{ .Values.requests.memory }}
+          limits:
+            cpu: {{ .Values.limits.cpu }}
+            memory: {{ .Values.limits.memory }}
+        volumeMounts:
+        - name: {{ .Values.app }}
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Values.app }}
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: {{ .Values.storage_class }}
+      resources:
+        requests:
+          storage: {{ .Values.storage_size }}

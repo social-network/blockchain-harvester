@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.app }}-migration-job
+  namespace: {{ .Values.namespace }}
+
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded
+
+spec:
+  activeDeadlineSeconds: 600
+  template:
+    spec:
+      containers:
+
+        - name: migrations
+          image: postgres:12
+          command:
+          - "bash"
+          - "-ec"
+          - |
+            set -ex
+            
+            CONN="psql postgresql://{{ .Values.postgres.user }}:{{.Values.postgres.password }}@postgres-0.postgres.{{ .Values.namespace }}:{{ .Values.postgres.port }}/{{ .Values.postgres.database }}"
+            $CONN -1 -f /polkastats.sql
+
+          volumeMounts:
+          - name: migrations
+            mountPath: /polkastats.sql
+            subPath: polkastats.sql
+
+      volumes:
+        - name: migrations
+          configMap:
+            name: postgres-migration-config
+      restartPolicy: Never
+  backoffLimit: 2
