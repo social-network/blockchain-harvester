@@ -1,6 +1,6 @@
-# PolkaStats Backend v3
+# Social DAO Blockchain Data Harvester
 
-New improved backend for https://polkastats.io!
+Fork of Polkastats-backend-v3 to work with The Social DAO.
 
 <!--ts-->
 
