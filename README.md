@@ -1,4 +1,4 @@
-# Social DAO Blockchain Data Harvester
+# Social DAO Blockchain Data Indexer
 
 Fork of Polkastats-backend-v3 to work with The Social DAO. This repo is used to index data into postgres for providing a higher performance API to front end applications.
 
