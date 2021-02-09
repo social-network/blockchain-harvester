@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.app }}
+  namespace: {{ .Values.namespace }}
+spec:
+  ports:
+  - port: 5432
+    name: postgres
+  selector:
+    app: {{ .Values.app }}
+  sessionAffinity: None
+  type: ClusterIP
+  clusterIP: None

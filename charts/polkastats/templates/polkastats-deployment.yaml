@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.app }}
+  template:
+    metadata:
+      name: {{ .Values.app }}
+      labels:
+        app: {{ .Values.app }}
+    spec:
+      {{- if .Values.rbac.enable }}
+      serviceAccountName: {{ .Values.rbac.name }}
+      {{- else }}
+      serviceAccountName: default
+      {{- end }}
+      terminationGracePeriodSeconds: 300
+
+      containers:
+      - name: main
+        image: "{{ .Values.polkastats.image.repository }}:{{ .Values.polkastats.image.tag }}"
+        env:
+        - name: SUBSTRATE_NETWORK 
+          value: substrate
+        - name: WS_PROVIDER_URL
+          value: "ws://{{ .Values.app }}-node-ws.{{ .Values.namespace }}:9944"
+        - name: POSTGRES_HOST
+          value: "postgres-0.postgres.{{ .Values.namespace }}"
+        - name: POSTGRES_USER
+          value: "{{ .Values.postgres.user }}"
+        - name: POSTGRES_DATABASE
+          value: "{{ .Values.postgres.database }}"
+        - name: POSTGRES_PASSWORD
+          value: "{{ .Values.postgres.password }}"
+        - name: POSTGRES_PORT
+          value: "{{ .Values.postgres.port }}"
+
+        resources:
+          requests:
+            cpu: {{ .Values.polkastats.requests.cpu }}
+            memory: {{ .Values.polkastats.requests.memory }}
+          limits:
+            cpu: {{ .Values.polkastats.limits.cpu }}
+            memory: {{ .Values.polkastats.limits.memory }}

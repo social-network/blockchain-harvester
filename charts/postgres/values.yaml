@@ -1,0 +1,31 @@
+namespace: polkastats
+
+
+# if set to true a service account for substrate will be created
+rbac:
+  enable: true
+  name: postgres
+
+
+# name of the statefulset
+app: postgres
+listen_node_port: false
+
+
+image:
+  repository: postgres
+  tag: 12
+  pullPolicy: IfNotPresent
+database: polkastats
+user: polkastats
+password: polkastats
+requests:
+  cpu: 0.5
+  memory: 512Mi
+limits:
+  cpu: 1
+  memory: 1024Mi
+storage_size: 32Gi
+
+
+storage_class: do-block-storage
