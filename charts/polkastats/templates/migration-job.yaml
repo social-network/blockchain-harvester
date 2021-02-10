@@ -22,7 +22,11 @@ spec:
           - |
             set -ex
             
+            {{- if .Values.postgres.host }}
+            CONN="psql postgresql://{{ .Values.postgres.user }}:{{.Values.postgres.password }}@{{ .Values.postgres.host }}:{{ .Values.postgres.port }}/{{ .Values.postgres.database }}"
+            {{- else }}
             CONN="psql postgresql://{{ .Values.postgres.user }}:{{.Values.postgres.password }}@postgres-0.postgres.{{ .Values.namespace }}:{{ .Values.postgres.port }}/{{ .Values.postgres.database }}"
+            {{- end }}
             $CONN -1 -f /polkastats.sql
 
           volumeMounts:
