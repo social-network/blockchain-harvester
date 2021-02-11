@@ -30,10 +30,10 @@ spec:
         - name: WS_PROVIDER_URL
           value: "ws://{{ .Values.app }}-node-ws.{{ .Values.namespace }}:9944"
         - name: POSTGRES_HOST
-        {{- if Values.postgres.host }}
+        {{- if .Values.postgres.host }}
           value: {{ .Values.postgres.host }}
         {{- else }}
-          value: {{ "postgres-0.postgres.{{ .Values.namespace }}" }}
+          value: "postgres-0.postgres.{{ .Values.namespace }}"
         {{- end }}
         - name: POSTGRES_USER
           value: "{{ .Values.postgres.user }}"
