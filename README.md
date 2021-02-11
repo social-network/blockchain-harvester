@@ -63,6 +63,10 @@ npm run docker:build
 npm run docker
 ```
 
+## Production Deployment
+
+To deploy the crawler and social network node to kubernetes see the /charts folder.
+
 ## Crawler
 
 This crawler container listens to new blocks and fills the database. There are a number of processes executed within this container. Some of this processes are triggered based on time configuration that can be seen in this file: [backend.config.js](https://github.com/Colm3na/polkastats-backend-v3/blob/develop/backend.config.js)
