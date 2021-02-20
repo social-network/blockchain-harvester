@@ -88,7 +88,9 @@ const customTypes = {
   },
   "Id": "AuthorityId",
   "ChainId": "u8",
-  "ResourceId": "Vec<u8>"
+  "ResourceId": "Vec<u8>",
+  "ExchangeId": "u64",
+  "CurrencyOf": "Balance"
 };
 var _default = customTypes;
 exports.default = _default;
