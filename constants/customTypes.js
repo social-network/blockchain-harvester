@@ -21,7 +21,6 @@ const customTypes = {
     "creation": "Moment",
     "nonce": "u64"
   },
-  "TokenId": "u64",
   "SwapId": "u64",
   "TokenBalance": "u64",
   "Swap": {
@@ -90,7 +89,12 @@ const customTypes = {
   "ChainId": "u8",
   "ResourceId": "Vec<u8>",
   "ExchangeId": "u64",
-  "CurrencyOf": "Balance"
+  "CurrencyOf": "Balance",
+  "NftId": "U256",
+  "Erc721Token": {
+    "id": "NftId",
+    "metadata": "Vec<u8>"
+  }
 };
 var _default = customTypes;
 exports.default = _default;
