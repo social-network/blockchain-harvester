@@ -1,6 +1,6 @@
-# Social DAO Blockchain Data Indexer
+# Social Network Energy Indexer
 
-Fork of Polkastats-backend-v3 to work with The Social DAO. This repo is used to index data into postgres for providing a higher performance API to front end applications.
+Fork of Polkastats-backend-v3 to work with Social Network Energy. This repo is used to index data into postgres for providing a higher performance API to front end applications.
 
 <!--ts-->
 
