@@ -1,0 +1,78 @@
+version: "3"
+
+services:
+  #
+  # Blockchain archive node
+  #
+  substrate-node:
+    image: substrate-client:kusama-latest
+    hostname: substrate-node
+    build: ./substrate-client
+    volumes:
+      - "substrate-data:/data"
+    ports:
+      - "30333:30333"
+      - "9933:9933"
+      - "9944:9944"
+    command: -d /data --unsafe-ws-external --unsafe-rpc-external --rpc-cors all --pruning=archive --name 'social.network stats' --chain polkadot
+    restart: on-failure
+  #
+  # SQL data base
+  #
+  postgres:
+    image: postgres
+    ports:
+     - "5434:5432"
+    restart: always
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+      - "./sql/polkastats.sql:/docker-entrypoint-initdb.d/polkastats.sql"
+    environment:
+      POSTGRES_USER: "polkastats"
+      POSTGRES_PASSWORD: "polkastats"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U polkastats"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  #
+  # Hasura
+  #
+  graphql-engine:
+    image: hasura/graphql-engine:v1.3.3
+    ports:
+      - "8080:8080"
+    depends_on:
+      - "postgres"
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://polkastats:polkastats@postgres:5432/polkastats
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      ## uncomment next line to set an admin secret
+      #  HASURA_GRAPHQL_ADMIN_SECRET: secret
+  #
+  # Block crawler
+  #
+  crawler:
+    image: polkastats-backend:latest
+    build:
+      context: ../../
+      dockerfile: ./docker/polkastats-backend/backend/Dockerfile
+    depends_on:
+      - "postgres"
+      - "substrate-node"
+    restart: on-failure
+    environment:
+      - NODE_ENV=production
+      - WS_PROVIDER_URL=wss://chi1.social.network
+      - SUBSTRATE_NETWORK=polkadot
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+
+#
+# Persisten volumes
+#
+volumes:
+  db-data: {}
+  substrate-data: {}
