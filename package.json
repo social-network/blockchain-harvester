@@ -5,18 +5,18 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "docker": "docker-compose -f docker/polkastats-backend/docker-compose-polkadot.yml up -d",
+    "docker": "docker-compose -f docker/polkastats-backend/docker-compose-social.yml up -d",
     "docker:polkadot": "docker-compose -f docker/polkastats-backend/docker-compose-polkadot.yml up -d",
     "docker:kusama": "docker-compose -f docker/polkastats-backend/docker-compose-kusama.yml up -d",
     "docker:westend": "docker-compose -f docker/polkastats-backend/docker-compose-westend.yml up -d",
-    "docker:build": "docker-compose -f docker/polkastats-backend/docker-compose-polkadot.yml build",
+    "docker:build": "docker-compose -f docker/polkastats-backend/docker-compose-social.yml build",
     "docker:build:polkadot": "docker-compose -f docker/polkastats-backend/docker-compose-polkadot.yml build",
     "docker:build:kusama": "docker-compose -f docker/polkastats-backend/docker-compose-kusama.yml build",
     "docker:build:westend": "docker-compose -f docker/polkastats-backend/docker-compose-westend.yml build",
     "docker:clean": "bash docker/polkastats-backend/clean-polkastats-dockers",
     "docker:stop": "docker stop polkastats-backend_crawler_1 polkastats-backend_graphql-engine_1 polkastats-backend_postgres_1 polkastats-backend_substrate-node_1 polkastats-backend_phragmen_1",
     "docker:postgres:backup": "docker exec -t polkastats-backend_postgres_1 pg_dump polkastats -c -U polkastats > polkastats_dump.sql",
-    "docker:rebuild:graphql": "docker-compose -f docker/polkastats-backend/docker-compose-polkadot.yml up -d graphql-engine"
+    "docker:rebuild:graphql": "docker-compose -f docker/polkastats-backend/docker-compose-social.yml up -d graphql-engine"
   },
   "repository": {
     "type": "git",
@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/Colm3na/polkastats-backend-v3#readme",
   "dependencies": {
-    "@polkadot/api": "^3.8.1",
+    "@polkadot/api": "^2.5.1",
     "axios": "^0.21.1",
     "bignumber.js": "^9.0.1",
     "dotenv": "^8.2.0",
