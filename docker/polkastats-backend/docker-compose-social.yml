@@ -51,24 +51,7 @@ services:
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       ## uncomment next line to set an admin secret
       #  HASURA_GRAPHQL_ADMIN_SECRET: secret
-  #
-  # Block crawler
-  #
-  crawler:
-    image: polkastats-backend:latest
-    build:
-      context: ../../
-      dockerfile: ./docker/polkastats-backend/backend/Dockerfile
-    depends_on:
-      - "postgres"
-      - "substrate-node"
-    restart: on-failure
-    environment:
-      - NODE_ENV=production
-      - WS_PROVIDER_URL=wss://chi1.social.network
-      - SUBSTRATE_NETWORK=polkadot
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
+
 
 #
 # Persisten volumes
